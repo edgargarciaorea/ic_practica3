@@ -1,2 +1,2 @@
-# ic_tarea3_finetunnig
+# ic tarea3 finetunnig
 Este repositorio contiene el apartado de fine tunnig de la tarea 3 de la práctica 3 de ingeniería de los computadores.
