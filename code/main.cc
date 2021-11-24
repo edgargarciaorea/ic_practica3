@@ -103,7 +103,7 @@ int main(int argc, char** argv)
     
     // Fine tune the KNN classifier with training data.
     double start = omp_get_wtime();
-    int k = fineTuning(1, 10, std::vector<TSample>(train.begin(), train.begin() + 20000), 5);
+    int k = fineTuning(1, 10, std::vector<TSample>(train.begin(), train.begin() + 1000/*20000*/), 5);
     std::cout<<"Best k: "<<k<<" found in "<<omp_get_wtime() - start<<" seconds"<<std::endl;
     
     // Test the classifier with testing data.
