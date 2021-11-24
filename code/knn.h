@@ -2,7 +2,7 @@
 #define __KNN_H
 
 #include "sample.h"
-#include 
+#include <opencv2/opencv.hpp>
 #include <vector>
 
 namespace knn
@@ -20,9 +20,11 @@ namespace knn
             /// <param name="k">The k neighbors to compute the classification.</param>
             KNN(const std::vector<TSample> &train, int k=1)
             {
-                #pragma omp parallel for
-            	for(int i=0;i<train.size();i++)
+                #pragma omp for ordered schedule(dynamic)
+            	for(int i=0;i<train.size();i++) {
+                    #pragma omp ordered
             		this->train.push_back(train[i]);
+                }
             		
             	this->k = k;
             };

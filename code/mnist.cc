@@ -86,12 +86,23 @@ bool mnist::loadMnist(const char* imageFilename, const char* labelFilename, std:
     cols = swapEndian(cols);
 
     char label;
+
+    //Cosecha propia-p
+    int maxDataset = 2000, countDataset = 0;
+    //Cosecha propia-f
     for (int i = 0; i < numItems; i++)
     {
         char* pixels = new char[rows * cols];
         labelFile.read(&label, 1);
         imageFile.read(pixels, rows * cols);
-        dataset.push_back(TSample(pixels, rows, cols, label));
+
+        //Cosecha propia-p
+        if (countDataset < maxDataset)
+        //Cosecha propia-f
+            dataset.push_back(TSample(pixels, rows, cols, label));
+        //Cosecha propia-p
+        countDataset++;
+        //Cosecha propia-f
     }
     
     return true;

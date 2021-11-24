@@ -121,6 +121,7 @@ int maxVotesLabel(std::map<int, int> histogram)
     int maxVotes = 0;
     int maxLabel = 0;
     std::map<int, int>::iterator itr;
+
     for (itr = histogram.begin(); itr != histogram.end(); ++itr) {
         if(itr->second > maxVotes) {
             maxVotes = itr->second;
@@ -141,8 +142,11 @@ int maxVotesLabel(std::map<int, int> histogram)
 int KNN::classify(const TSample &test) const
 {
     std::vector<KNNResult> results;
+
+    //#pragma omp for ordered schedule(dynamic)
     for(int i=0;i<this->train.size();i++)
     {
+        //#pragma omp ordered
         results.push_back(KNNResult(test, this->train[i]));
     }
     
@@ -162,10 +166,13 @@ int KNN::classify(const TSample &test) const
 double KNN::classifyAndEvaluate(const std::vector<TSample> &test, std::vector<int> &labels) const
 {
     int matches = 0;
+    #pragma omp for ordered schedule(static)
     for(int i=0;i<test.size();i++)
     {
         std::cout<<i<<"/"<<test.size()<<"\r"<<std::flush;
-        int label = this->classify(test[i]);
+        int label = this->classify(test[i]); 
+
+        #pragma omp ordered
         labels.push_back(label);
         
         if(label == test[i].label) matches++;
