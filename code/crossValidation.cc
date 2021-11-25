@@ -53,7 +53,7 @@ void CrossValidation::splitDataset(std::vector<TSample> &train, std::vector<TSam
 
     int start = foldSize * fold;
     int end = start + std::min(foldSize, (int)this->dataset.size());
-
+    
     for(int i=0;i<this->dataset.size();i++)
     {
         if(i<start || i>=end)

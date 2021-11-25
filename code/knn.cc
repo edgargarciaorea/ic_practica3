@@ -23,6 +23,7 @@ float euclidean(const TSample &a, const TSample &b)
     const float *imageA = a.image.ptr<float>(0);
     const float *imageB = b.image.ptr<float>(0);
 
+    #pragma omp simd
     for(int i=0;i<a.image.rows*a.image.cols;i++)
     {
     	float diff = imageA[i] - imageB[i];
@@ -101,6 +102,7 @@ typedef struct KNNResult
 std::map<int, int> histogram(const std::vector<KNNResult> &results, int k)
 {
     std::map<int, int> votes;
+    #pragma omp parallel for ordered shared(votes)
     for(int i=0;i<k;i++)
     {
         votes[results[i].label]++;
@@ -166,7 +168,8 @@ int KNN::classify(const TSample &test) const
 double KNN::classifyAndEvaluate(const std::vector<TSample> &test, std::vector<int> &labels) const
 {
     int matches = 0;
-    #pragma omp for ordered schedule(static)
+    //#pragma omp for ordered schedule(static)
+    #pragma omp parallel for ordered schedule(dynamic) num_threads(2)
     for(int i=0;i<test.size();i++)
     {
         std::cout<<i<<"/"<<test.size()<<"\r"<<std::flush;
