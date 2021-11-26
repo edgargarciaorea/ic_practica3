@@ -7,9 +7,11 @@
 #include <vector>
 #include <string>
 #include <sstream>
-
 using namespace knn;
 using namespace crossValidation;
+#define NUM_THREADS 1
+#define NUM_START 0
+#define NUM_END this->folds
 
 /// <summary>
 /// Performs an N-Fold Cross Validation with the specified KNN parameter.
@@ -21,21 +23,29 @@ using namespace crossValidation;
 double CrossValidation::validate(uint k) const
 {
     double accuracy = 0.0;
+    int fold;
+    int nStart=NUM_START, nEnd=NUM_END;
     std::cout<<"Starting "<<this->getName()<<std::endl;
-    for(int fold=0;fold<this->folds;fold++)
+    //shared será la accuracy i el nStart y el nEnd
+    omp_set_num_threads(NUM_THREADS);
+    #pragma omp parallel default(none) private (fold) shared(nStart,nEnd,accuracy,k,std::cout)
     {
-        std::vector<TSample> train, test;
-        this->splitDataset(train, test, fold);
-     
-        std::cout<<"Testing fold "<<fold<<std::endl;
-        double start = omp_get_wtime();
-        KNN knn(train, k);
-        std::vector<int> labels;
-        double acc = knn.classifyAndEvaluate(test, labels);
-        accuracy += acc;
-        std::cout<<"Fold: "<<fold<<" Accuracy: "<<acc * 100<<"% completed in "<<omp_get_wtime() - start<<" seconds"<<std::endl;
+      #pragma omp for
+        for(fold=nStart;fold<nEnd;fold++){
+            std::vector<TSample> train, test;
+            this->splitDataset(train, test, fold);
+
+            std::cout<<"Testing fold "<<fold<<std::endl;
+            double start = omp_get_wtime();
+            KNN knn(train, k);
+            std::vector<int> labels;
+            double acc = knn.classifyAndEvaluate(test, labels);
+            accuracy += acc;
+            std::cout<<"Fold: "<<fold<<" Accuracy: "<<acc * 100<<"% completed in "<<omp_get_wtime() - start<<" seconds"<<std::endl;
+
+        }
     }
-    
+
     return accuracy /= this->folds;
 }
 
@@ -53,7 +63,7 @@ void CrossValidation::splitDataset(std::vector<TSample> &train, std::vector<TSam
 
     int start = foldSize * fold;
     int end = start + std::min(foldSize, (int)this->dataset.size());
-    
+
     for(int i=0;i<this->dataset.size();i++)
     {
         if(i<start || i>=end)
@@ -73,6 +83,6 @@ std::string CrossValidation::getName() const
         ss<<folds<<"-Folds Cross Validation";
     else
         ss<<"leave-one-out Cross Validation";
-        
+
     return ss.str();
 }

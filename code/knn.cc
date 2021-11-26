@@ -145,10 +145,8 @@ int KNN::classify(const TSample &test) const
 {
     std::vector<KNNResult> results;
 
-    //#pragma omp for ordered schedule(dynamic)
     for(int i=0;i<this->train.size();i++)
     {
-        //#pragma omp ordered
         results.push_back(KNNResult(test, this->train[i]));
     }
     
@@ -168,7 +166,6 @@ int KNN::classify(const TSample &test) const
 double KNN::classifyAndEvaluate(const std::vector<TSample> &test, std::vector<int> &labels) const
 {
     int matches = 0;
-    //#pragma omp for ordered schedule(static)
     #pragma omp parallel for ordered schedule(dynamic) num_threads(2)
     for(int i=0;i<test.size();i++)
     {
@@ -183,4 +180,3 @@ double KNN::classifyAndEvaluate(const std::vector<TSample> &test, std::vector<in
     
     return matches / (double)test.size();
 }
-
