@@ -3,7 +3,7 @@
 ## Descripción
 Este repositorio contiene el código paralelizado de la práctica 3 mediante openMP.
 
-## Integrantes
+## Integrantes del grupo
 * Vicent Caravaca Rostoll
 * Carmen Hidalgo Brotons
 * Pablo Navarro Ortiz
