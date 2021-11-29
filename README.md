@@ -1,2 +1,10 @@
-# ic tarea3 finetunnig
-Este repositorio contiene el apartado de fine tunnig de la tarea 3 de la práctica 3 de ingeniería de los computadores.
+# IC PRÁCTICA 3
+
+## Integrantes
+* Vicent Caravaca Rostoll
+* Carmen Hidalgo Brotons
+* Pablo Navarro Ortiz
+* Luis Alfonso Jiménez Rodríguez
+
+## Descripción
+Este repositorio contiene el código paralelizado de la práctica 3 mediante openMP.
