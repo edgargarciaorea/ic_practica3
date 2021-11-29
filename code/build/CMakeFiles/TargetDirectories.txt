@@ -1,0 +1,3 @@
+/home/ic/Escritorio/ic_tarea3_finetunnig/code/build/CMakeFiles/rebuild_cache.dir
+/home/ic/Escritorio/ic_tarea3_finetunnig/code/build/CMakeFiles/edit_cache.dir
+/home/ic/Escritorio/ic_tarea3_finetunnig/code/build/CMakeFiles/cv.dir
